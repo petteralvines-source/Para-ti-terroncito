@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terroncitoooo ❤️</title>
+    <style>
+        :root {
+            /* Paleta de colores solicitada */
+            --rojo: #ff2a5f;
+            --rojo-glow: rgba(255, 42, 95, 0.4);
+            --morado: #7b2cbf;
+            --morado-oscuro: #3c096c;
+            --azul-noche: #0b091a;
+            --azul-electrico: #4cc9f0;
+            --blanco: #ffffff;
+            --blanco-translucido: rgba(255, 255, 255, 0.95);
+            --negro-card: rgba(15, 10, 25, 0.75);
+            --negro-puro: #05030a;
+            --texto-suave: #d8d5e8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(ellipse at bottom, #1b1435 0%, var(--azul-noche) 60%, var(--negro-puro) 100%);
+            color: var(--blanco);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- FONDO DE ESTRELLAS Y ESTRELLAS FUGACES --- */
+        #stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 8px var(--azul-electrico); }
+        }
+
+        /* Estrellas fugaces */
+        .shooting-star {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(-45deg, var(--blanco), var(--azul-electrico), rgba(123, 44, 191, 0));
+            filter: drop-shadow(0 0 6px var(--azul-electrico));
+            animation: tail 3s ease-in-out infinite, shooting 3s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            top: calc(50% - 1px);
+            right: 0;
+            height: 2px;
+            background: linear-gradient(-45deg, rgba(0, 0, 255, 0), var(--blanco), rgba(0, 0, 255, 0));
+            transform: translateX(50%) rotate(45deg);
+            border-radius: 100%;
+        }
+
+        @keyframes tail {
+            0% { width: 0; }
+            30% { width: 100px; }
+            100% { width: 0; }
+        }
+
+        @keyframes shooting {
+            0% {
+                transform: translateX(0) translateY(0) rotate(45deg);
+                opacity: 1;
+            }
+            70% { opacity: 1; }
+            100% {
+                transform: translateX(600px) translateY(600px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        /* --- CONTENIDO PRINCIPAL --- */
+        header {
+            text-align: center;
+            margin: 30px 0 20px 0;
+            animation: fadeInDown 1.2s ease-out;
+            z-index: 1;
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #ffffff 0%, #ff7597 50%, var(--rojo) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 25px rgba(255, 42, 95, 0.5);
+            font-weight: 800;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--texto-suave);
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            z-index: 1;
+        }
+
+        /* TARJETAS CON DISEÑO ELEGANTE Y BORDE NEÓN */
+        .card {
+            background: var(--negro-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 24px;
+            border: 1px solid rgba(123, 44, 191, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 
+                        inset 0 0 15px rgba(255, 42, 95, 0.05);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: var(--rojo);
+            box-shadow: 0 12px 40px rgba(123, 44, 191, 0.4), 
+                        0 0 20px var(--rojo-glow);
+        }
+
+        .card h2 {
+            color: var(--blanco);
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Botón principal */
+        .heart-btn {
+            background: linear-gradient(135deg, var(--rojo) 0%, var(--morado) 100%);
+            color: var(--blanco);
+            border: none;
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px var(--rojo-glow), 0 0 15px rgba(123, 44, 191, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .heart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px var(--rojo), 0 0 25px var(--azul-electrico);
+        }
+
+        .heart-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Carta desplegable */
+        .letter-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .letter-preview {
+            background: rgba(60, 9, 108, 0.3);
+            border: 2px dashed var(--rojo);
+            padding: 20px;
+            border-radius: 16px;
+            font-weight: bold;
+            color: var(--blanco);
+            transition: all 0.3s;
+        }
+
+        .letter-preview:hover {
+            background: rgba(123, 44, 191, 0.3);
+            border-color: var(--azul-electrico);
+        }
+
+        .letter-content {
+            display: none;
+            margin-top: 15px;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--texto-suave);
+            animation: fadeIn 0.8s ease;
+            text-align: left;
+            background: rgba(5, 3, 10, 0.8);
+            padding: 20px;
+            border-radius: 16px;
+            border-left: 4px solid var(--rojo);
+        }
+
+        /* Cuadrícula de razones */
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .reason-chip {
+            background: rgba(60, 9, 108, 0.4);
+            border: 1px solid rgba(255, 42, 95, 0.3);
+            padding: 14px 10px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: var(--blanco);
+            font-weight: 600;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .reason-chip:hover {
+            border-color: var(--azul-electrico);
+            background: rgba(123, 44, 191, 0.6);
+            transform: scale(1.02);
+        }
+
+        .reason-chip.revealed {
+            background: linear-gradient(135deg, var(--rojo) 0%, var(--morado-oscuro) 100%);
+            color: var(--blanco);
+            border-color: var(--blanco);
+            box-shadow: 0 4px 15px var(--rojo-glow);
+        }
+
+        /* Cuadro de mensajes */
+        .cheer-box {
+            font-size: 1.1rem;
+            min-height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(11, 9, 26, 0.8);
+            border-radius: 16px;
+            border: 1px solid var(--morado);
+            color: var(--azul-electrico);
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .action-btn {
+            background: transparent;
+            color: var(--blanco);
+            border: 2px solid var(--azul-electrico);
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: var(--azul-electrico);
+            color: var(--negro-puro);
+            box-shadow: 0 0 15px var(--azul-electrico);
+        }
+
+        /* Elementos flotantes */
+        .floating-heart {
+            position: fixed;
+            pointer-events: none;
+            animation: floatUp 3s linear forwards;
+            font-size: 24px;
+            z-index: 100;
+            filter: drop-shadow(0 0 6px var(--rojo));
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.3) rotate(20deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fondo espacial con estrellas y cometas -->
+    <div id="stars-container"></div>
+
+    <header>
+        <h1>Terroncitoooo ❤️</h1>
+        <p class="subtitle">Porque mereces recordar lo increíble que eres cada día</p>
+    </header>
+
+    <div class="container">
+
+        <!-- Interacción 1: Lluvia de Cariño -->
+        <div class="card">
+            <h2>¿Un día pesado? 🌸</h2>
+            <p style="margin: 10px 0 15px; color: var(--texto-suave);">Clic aquí, tal vez no esté presente pero estoy aquí:</p>
+            <button class="heart-btn" onclick="createHearts(event)">🌸 ¡Presiona aquí! ✨</button>
+            <p id="counter" style="margin-top: 12px; font-size: 0.85rem; color: var(--azul-electrico);">Besos enviados: 0</p>
+        </div>
+
+        <!-- Interacción 2: Carta Sorpresa -->
+        <div class="card">
+            <h2>Una cartita para ti ✉️</h2>
+            <div class="letter-container" onclick="toggleLetter()">
+                <div class="letter-preview" id="letterPreview">Toca para abrir la carta... 💌</div>
+                <div class="letter-content" id="letterContent">
+                    <p><strong style="color: var(--rojo);">Mi amor,</strong></p><br>
+                    <p>Quería recordarte lo sumamente importante que eres en mi vida. A veces el día a día o las preocupaciones nos hacen olvidar lo lejos que hemos llegado y lo increíble que eres como persona.</p><br>
+                    <p>Quiero que sepas que admiro tu fuerza, tu forma de ver el mundo y la luz que le das a mis días con solo sonreír. No importa qué reto tengas enfrente, confío plenamente en ti y siempre estaré a tu lado para apoyarte en todo.</p><br>
+                    <p><strong style="color: var(--azul-electrico);">Me gustas muchoooo!. Nunca lo olvides. ❤️</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interacción 3: Razones de valor -->
+        <div class="card">
+            <h2>Aprendo a programar para ti 🌟</h2>
+            <p style="margin-bottom: 12px; font-size: 0.9rem; color: var(--texto-suave);">Toca cada recuadro para descubrirlo:</p>
+            <div class="reasons-grid">
+                <div class="reason-chip" onclick="revealReason(this, 'Tu sonrisa que me cambia el día')">Toca aquí ❤️</div>
+                <div class="reason-chip" onclick="revealReason(this, 'Tu bondad con los demás')">Toca aquí ✨</div>
+                <div class="reason-chip" onclick="revealReason(this, 'La paz que me transmites')">Toca aquí 💕</div>
+                <div class="reason-chip" onclick="revealReason(this, 'Tu inteligencia y determinación')">Toca aquí 🌸</div>
+                <div class="reason-chip" onclick="revealReason(this, 'Lo bonito que abrazas')">Toca aquí 💖</div>
+                <div class="reason-chip" onclick="revealReason(this, 'Simplemente... ser tú')">Toca aquí ❤️</div>
+            </div>
+        </div>
+
+        <!-- Interacción 4: Mensaje de ánimo aleatorio -->
+        <div class="card">
+            <h2>Un recordatorio para hoy 📜</h2>
+            <div class="cheer-box" id="cheerText">
+                Haz clic en el botón de abajo para leer algo especial...
+            </div>
+            <button class="action-btn" onclick="generateCheer()">Dame un mensaje ✨</button>
+        </div>
+
+    </div>
+
+    <script>
+        // Generador dinámico de estrellas fijas/titilantes
+        const starsContainer = document.getElementById('stars-container');
+        const starCount = 120;
+
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+            starsContainer.appendChild(star);
+        }
+
+        // Generador de estrellas fugaces
+        function createShootingStar() {
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
+            shootingStar.style.top = `${Math.random() * 50}%`;
+            shootingStar.style.left = `${Math.random() * 80}%`;
+            starsContainer.appendChild(shootingStar);
+
+            setTimeout(() => {
+                shootingStar.remove();
+            }, 3000);
+        }
+
+        // Lanzar una estrella fugaz periódicamente
+        setInterval(createShootingStar, 4000);
+        createShootingStar(); // Primera estrella al cargar
+
+        // Contador de besos y animación flotante
+        let kisses = 0;
+        function createHearts(e) {
+            kisses++;
+            document.getElementById('counter').innerText = `Besos enviados: ${kisses}`;
+            
+            const emojis = ['❤️', '💖', '💕', '🌸', '✨', '💋', '💜', '💙'];
+            
+            for(let i = 0; i < 7; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                
+                const x = e.clientX + (Math.random() - 0.5) * 120;
+                const y = e.clientY + (Math.random() - 0.5) * 120;
+                
+                heart.style.left = `${x}px`;
+                heart.style.top = `${y}px`;
+                
+                document.body.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 3000);
+            }
+        }
+
+        // Desplegar carta
+        function toggleLetter() {
+            const content = document.getElementById('letterContent');
+            const preview = document.getElementById('letterPreview');
+            
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+                preview.innerText = 'Toca para abrir la carta... 💌';
+            } else {
+                content.style.display = 'block';
+                preview.innerText = 'Toca para cerrar la carta 💌';
+            }
+        }
+
+        // Revelar recuadros
+        function revealReason(element, text) {
+            element.innerText = text;
+            element.classList.add('revealed');
+        }
+
+        // Mensajes de ánimo aleatorios
+        const cheers = [
+            "Eres mucho más capaz y fuerte de lo que te imaginas. ¡Tú puedes con todo! 💪❤️",
+            "Si el día se pone difícil, recuerda respirar profundo. Yo estoy orgulloso de ti siempre. 🌸",
+            "No te olvides de sonreír hoy, iluminas todo a tu alrededor cuando lo haces. ✨",
+            "Un paso a la vez, mi amor. Estás haciendo un trabajo excelente. 🌟",
+            "Recuerda que eres la prioridad de mi corazón hoy y siempre. 🥰"
+        ];
+
+        function generateCheer() {
+            const index = Math.floor(Math.random() * cheers.length);
+            document.getElementById('cheerText').innerText = cheers[index];
+        }
+    </script>
+</body>
+</html>
