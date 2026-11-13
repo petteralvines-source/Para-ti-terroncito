@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi terroncito Nakamy - AM Edition</title>
+    <!-- Fuentes de Google para la carta antigua y el estilo moderno -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,400&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Fondo de estrellas con rastro */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Contenedor principal */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 35px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .title {
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+        }
+
+        /* Diseño del Disco de Vinilo estilo AM */
+        .vinyl-wrapper {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .vinyl-wrapper:hover {
+            transform: scale(1.06);
+        }
+
+        .vinyl {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, #1a1a1a 0%, #0a0a0a 40%, #141414 42%, #050505 60%, #181818 62%, #000000 100%);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.12), inset 0 0 15px rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: spin 12s linear infinite;
+            animation-play-state: paused;
+        }
+
+        /* Reflejos del vinilo */
+        .vinyl::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 50%;
+            background: conic-gradient(
+                transparent 0deg, 
+                rgba(255, 255, 255, 0.08) 45deg, 
+                transparent 90deg, 
+                transparent 180deg, 
+                rgba(255, 255, 255, 0.08) 225deg, 
+                transparent 270deg
+            );
+        }
+
+        .vinyl.playing {
+            animation-play-state: running;
+        }
+
+        /* Etiqueta central del disco con la onda AM */
+        .vinyl-label {
+            width: 105px;
+            height: 105px;
+            background-color: #000000;
+            border-radius: 50%;
+            border: 2px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Agujero central */
+        .vinyl-label::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: #000;
+            border: 1px solid #555;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .am-wave {
+            width: 85px;
+            height: auto;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .hint-text {
+            font-size: 0.85rem;
+            color: #aaa;
+            letter-spacing: 1px;
+        }
+
+        /* Botón para abrir la carta */
+        .btn-letter {
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 12px 28px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-letter:hover {
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        /* MODALES (Ventanas emergentes) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(6px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        /* ESTILO 1: Modal Letra de la Canción (Estilo portada AM) */
+        .am-lyrics-box {
+            background-color: #050505;
+            border: 1px solid #333;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            padding: 35px 30px;
+            position: relative;
+            text-align: center;
+            overflow-y: auto;
+            color: #ffffff;
+        }
+
+        .am-lyrics-box .close-btn {
+            color: #ffffff;
+        }
+
+        .song-header {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 15px;
+        }
+
+        .song-header h2 {
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .song-header p {
+            font-size: 0.8rem;
+            color: #888;
+            letter-spacing: 3px;
+        }
+
+        .lyrics-content {
+            font-size: 0.95rem;
+            line-height: 1.9;
+            color: #e0e0e0;
+            font-weight: 300;
+            white-space: pre-line;
+        }
+
+        /* ESTILO 2: Modal Carta Antigua (Pergamino) */
+        .vintage-letter-box {
+            background-color: #f4e4bc;
+            background-image: 
+                radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, rgba(184, 148, 86, 0.35) 100%),
+                repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(139, 105, 50, 0.08) 29px);
+            box-shadow: inset 0 0 50px rgba(101, 67, 33, 0.5), 0 15px 35px rgba(0, 0, 0, 0.8);
+            border: 1px solid #c9b07a;
+            width: 100%;
+            max-width: 550px;
+            max-height: 82vh;
+            padding: 45px 40px;
+            position: relative;
+            color: #2c1e11;
+            font-family: 'Cormorant Garamond', serif;
+            overflow-y: auto;
+            border-radius: 3px;
+        }
+
+        .vintage-letter-box .close-btn {
+            color: #4a3219;
+        }
+
+        .letter-date {
+            text-align: right;
+            font-style: italic;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #5c4024;
+        }
+
+        .letter-body {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            text-align: left;
+            white-space: pre-line;
+        }
+
+        .letter-signature {
+            margin-top: 30px;
+            text-align: right;
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-style: italic;
+        }
+
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(150, 150, 150, 0.3); border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+    <!-- =====================================================================
+         SECCIÓN PARA GITHUB: AQUÍ PUEDES AÑADIR TU CANCIÓN MP3
+         Cuando subas este archivo a GitHub, sube también tu archivo .mp3 
+         a la misma carpeta y cambia "tu-cancion.mp3" por el nombre exacto.
+         ===================================================================== -->
+    <audio id="bg-music" loop>
+        <source src="https://github.com/petteralvines-source/Para-ti-terroncito/raw/refs/heads/main/Arctic%20Monkeys%20-%20Stop%20The%20World%20I%20Wanna%20Get%20Off%20With%20You%20(Official%20Audio)%20-%20(320%20Kbps).mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Lienzo para las estrellas con estela -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Contenido Principal -->
+    <div class="main-container">
+        <div class="title">Para ti</div>
+
+        <!-- Disco Interactivo Estilo AM -->
+        <div class="vinyl-wrapper" id="vinylBtn" title="Haz clic para escuchar y leer">
+            <div class="vinyl" id="vinylDisc">
+                <div class="vinyl-label">
+                    <!-- Onda sonora icónica de Arctic Monkeys (AM) -->
+                    <svg class="am-wave" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 30 H45 L55 10 L65 50 L75 5 L85 55 L92 22 L97 38 L102 22 L109 55 L119 5 L129 50 L139 10 L149 30 H195" 
+                              stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <p class="hint-text">Toca el disco</p>
+
+        <!-- Botón para abrir la carta antigua -->
+        <button class="btn-letter" id="openLetterBtn">Leer mi carta</button>
+    </div>
+
+    <!-- MODAL 1: LETRA DE LA CANCIÓN (ESTILO AM) -->
+    <div class="modal-overlay" id="lyricsModal">
+        <div class="am-lyrics-box">
+            <button class="close-btn" id="closeLyrics">×</button>
+            <div class="song-header">
+                <h2>Stop the World I Wanna Get Off with You</h2>
+                <p>ARCTIC MONKEYS</p>
+                <!-- Onda decorativa pequeña -->
+                <svg width="100" height="25" viewBox="0 0 200 60" fill="none" style="margin-top: 10px;">
+                    <path d="M5 30 H45 L55 10 L65 50 L75 5 L85 55 L92 22 L97 38 L102 22 L109 55 L119 5 L129 50 L139 10 L149 30 H195" 
+                          stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            
+            <div class="lyrics-content">
+                <!-- =========================================================
+                     ========================================================= -->
+Open Sesame
+(We've places to go)
+We've people to see
+(Let's put 'em on hold)
+There's all sorts of shapes that I bet you can make
+When you want to escape, say the word
+Well, I know that getting you alone isn't easy to do
+With the exception of you, I dislike everyone in the room
+And I don't wanna lie, but I don't wanna tell you the truth
+Get the sense that you're on the move
+And you'll probably be leaving soon, so I'm telling you
+Stop the world 'cause I wanna get off with you
+Stop the world 'cause I wanna get off with you
+Eyes the colour of
+(Water left in mud)
+Icing sugar dust
+(Crazy green flashes)
+It's a funny thing that I cannot explain
+Don't you know the train keeps a-rolling?
+Stop the world 'cause I wanna get off with you
+Stop the world 'cause I wanna get off with you
+Well, I know that getting you alone isn't easy to do
+And I don't wanna lie, and I don't wanna tell you the truth
+And I know we got places to go, we got people to see
+Think we both oughta put 'em on hold and I know you agree, yeah
+Stop the world 'cause I wanna get off with you
+Stop the world 'cause I wanna get off with you
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: CARTA ANTIGUA PERSONAL -->
+    <div class="modal-overlay" id="letterModal">
+        <div class="vintage-letter-box">
+            <button class="close-btn" id="closeLetter">×</button>
+            <div class="letter-date">Para el amor de mi vida...</div>
+            
+            <!-- =========================================================
+                 ========================================================= -->
+            <div class="letter-body">
+En esta ocasión quiero decirteee, que está canción fue un paso muy lindo en mi vida, porque el verdadero significado de la canción es que quiero salir contigo sin que el mundo se entrometa entre nosotros, que solo seamos tu y yo en el mundo, detén el tiempo porque quiero salir contigo incluso teniendo a personas de las cuales tenemos que hablarles, como docentes u otros. Con el tiempo en stop, creo que nada de eso importaría, y podremos estar tu y yo, porque quiero salir contigo, eso signfica, tenia nervios de lo que sentía, pero sentía que debía decírtelo porque tal vez tenías otros asuntos. 
+
+Esta canción demuestra lo mucho que me gustas, lo mucho que siento por ti mi amor, y con esta cancion quiero decirte que me gustas mucho, quiero decirte que te amo sinceramente, decirte que eres espectacular y muy admirable, decirte que eres una persona que de tan solo verla, siento que el mundo está en paz y en lo único que puedo pensar es en lo mucho que te amo, en protegerte y estar siempre pendiente de ti, a veces fallo y soy un desastre, pero estoy dispuesto a todo por ti mi amor, una canción que me llega al alma, una canción buenísima que describe lo que siento, aparte de tambien I wanna be yours, jajajaja pupi, mi amor, yo te amo, y te agradezco que estés cuidando de mí, muchas gracias por esas comiditas y todas las risas que me has sacado, todas las molestadas que me has dado, bullying en su máximo esplendor, fue lo mejor de lo mejor, la verdad que me siento muy feliz y me siento me gustas, me gustas muchisimo, tocando el disco suena la canción, esa canción que me hará recordar el mismo instante donde Nakamy me dijo que le gustaba, no me lo esperaba, y ahora me quiero casar jajajaja, Dioooos muchas gracias, Nakamy ha logrado enamorarme, Nakamy es la mujer por la que siento 1000 cosas, Nakamy es la mujer por la que pondría al mundo de cabeza, Nakamy es la chica por la que soy humano, con ella en mi corazón todo lo que hay me parece lindo, la amo Señor, te amo Nakamy, me gustas, mi amoooooor, fuerzas con lo que estés pasando ahora, yo siempre estaré contigo, yo siempre estaré cerca de ti, incluso cuando no lo sientas, recuerda que Petter jamás te dejará sola. Nunca terroncito.
+
+            </div>
+
+            <div class="letter-signature">
+                Con todo mi amor,<br>
+                Petter
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* =====================================================================
+           ===================================================================== */
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let stars = [];
+        const numStars = 120;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Star {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 1.8 + 0.5;
+                // Velocidad suave
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.alpha = Math.random() * 0.7 + 0.3;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Reaparecer al salir de los bordes
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < numStars; i++) {
+            stars.push(new Star());
+        }
+
+        function animateStars() {
+            // Al pintar un rectángulo negro semi-transparente en lugar de limpiar todo,
+            // se crea el efecto de "rastro" o estela detrás de cada estrella.
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.14)';
+            ctx.fillRect(0, 0, width, height);
+
+            stars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+
+            requestAnimationFrame(animateStars);
+        }
+        animateStars();
+
+        /* =====================================================================
+           2. INTERACCIONES DEL DISCO, AUDIO Y VENTANAS
+           ===================================================================== */
+        const vinylBtn = document.getElementById('vinylBtn');
+        const vinylDisc = document.getElementById('vinylDisc');
+        const lyricsModal = document.getElementById('lyricsModal');
+        const closeLyrics = document.getElementById('closeLyrics');
+        const bgMusic = document.getElementById('bg-music');
+
+        const openLetterBtn = document.getElementById('openLetterBtn');
+        const letterModal = document.getElementById('letterModal');
+        const closeLetter = document.getElementById('closeLetter');
+
+        // Al hacer clic en el disco AM
+        vinylBtn.addEventListener('click', () => {
+            vinylDisc.classList.add('playing');
+            lyricsModal.classList.add('active');
+            
+            // Intenta reproducir la canción si ya añadiste el archivo en GitHub
+            if (bgMusic.querySelector('source').getAttribute('src') !== 'tu-cancion.mp3') {
+                bgMusic.play().catch(e => console.log("Audio esperando interacción:", e));
+            } else {
+                bgMusic.play().catch(() => {});
+            }
+        });
+
+        // Cerrar modal de la letra
+        closeLyrics.addEventListener('click', () => {
+            lyricsModal.classList.remove('active');
+        });
+
+        // Abrir carta antigua
+        openLetterBtn.addEventListener('click', () => {
+            letterModal.classList.add('active');
+        });
+
+        // Cerrar carta antigua
+        closeLetter.addEventListener('click', () => {
+            letterModal.classList.remove('active');
+        });
+
+        // Cerrar modales si se hace clic fuera del cuadro
+        window.addEventListener('click', (e) => {
+            if (e.target === lyricsModal) {
+                lyricsModal.classList.remove('active');
+            }
+            if (e.target === letterModal) {
+                letterModal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
